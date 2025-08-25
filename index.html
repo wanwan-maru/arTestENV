@@ -16,6 +16,9 @@
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
 
+        <!-- html2canvas -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
         <style>
             body, 
             a-scene {
@@ -124,15 +127,20 @@
         </div>
 
         <script>
-            function takeScreenshot() {
-                const scene = document.querySelector('a-scene');
-                const screenshot = scene.components.screenshot;
-                const canvas = screenshot.getCanvas('perspective');
-                const imgData = canvas.toDataURL('image/png');
+            async function takeScreenshot() {
+                const controls = document.querySelector('.camera-controls');
+                controls.style.display = 'none';
+                const canvas = await html2canvas(document.body, {
+                    scale: window.devicePixelRatio,
+                    useCORS: true
+                });
+                controls.style.display = '';
                 const link = document.createElement('a');
-                link.href = imgData;
+                link.href = URL.createObjectURL(blob);
                 link.download = 'ar-screenshot.png';
                 link.click();
+                URL.revokeObjectURL(link.href);
+                }, 'image/png');
             }
         </script>
         
