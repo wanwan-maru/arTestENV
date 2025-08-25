@@ -2,7 +2,7 @@
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0", user-scalable=no">
         <title>test</title>
         <!-- A-Frame ライブラリの読み込み ※GIFはV0.9.0から -->
         <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
@@ -16,14 +16,8 @@
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
 
         <style>
-            <!-- サイズとスクロール。ビューポート（画面の高さ）いっぱいに表示し、はみ出したコンテンツは表示しない（スクロールバーも出ない）。  -->
-            html, body {
-                margin: 0; padding: 0;
-                width: 100%; height: 100%;
-                overflow: hidden;
-            }
             body {
-                position: relative;
+                margin: 0; 
                 font-family: -apple-system, BlinkMacSystemFont, sans-serif;
                 background: #000; color: #fff;
 
@@ -32,6 +26,14 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: space-between;
+
+                <!-- サイズとスクロール。ビューポート（画面の高さ）いっぱいに表示する。  -->
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            body {
+                position: relative;
             }
 
             <!-- A-Frameの3Dシーンを画面全体に  -->
