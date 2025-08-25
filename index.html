@@ -129,12 +129,15 @@
         <script>
             async function takeScreenshot() {
                 const controls = document.querySelector('.camera-controls');
+                
                 controls.style.display = 'none';
                 const canvas = await html2canvas(document.body, {
                     scale: window.devicePixelRatio,
                     useCORS: true
                 });
                 controls.style.display = '';
+                
+                canvas.toBlob(blob => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = 'ar-screenshot.png';
