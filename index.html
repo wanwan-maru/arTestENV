@@ -17,44 +17,27 @@
 
         <style>
             body {
-                margin: 0; 
-                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-                background: #000; color: #fff;
-
-                <!-- レイアウトと配置。子要素を縦方向（上から下）、水平方向（横）に中央揃え、縦方向に上下に分けて配置し、間にスペースを均等に入れる。  -->
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: space-between;
-
-                <!-- サイズとスクロール。ビューポート（画面の高さ）いっぱいに表示する。  -->
-                position: relative;
-                width: 100%;
-                height: 100%;
-            }
-            body {
-                position: relative;
+                margin: 0; padding: 0;　overflow: hidden;
+                width: 100%; height: 100%;
+                background: #000;
             }
 
             <!-- A-Frameの3Dシーンを画面全体に  -->
             a-scene {
-                position: absolute;
-                top: 0; left: 0; width: 100%; height: 100%;
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
             }
 
             <!-- カメラみたいなUI  -->
             .camera-controls {
-                width: 100%;
-                padding: 20px;
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), #000);
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                margin: auto;
             }
 
             <!-- カメラみたいなシャッターボタン  -->
@@ -76,13 +59,11 @@
     </head>
 
     <body style="margin: 0; overflow: hidden;">
-        <a-scene embedded
+        <a-scene
             vr-mode-ui="enabled: false;"
             loading-screen="enabled: false;"
             arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
             gesture-detector
-
-            
             screenshot="width: 2048; height: 1024"            
         >
             
@@ -139,11 +120,11 @@
             <a-entity camera></a-entity>
         </a-scene>
 
+        <!-- スクショ機能 -->
         <div class="camera-controls">
             <button class="shutter-button" onclick="takeScreenshot()"></button>
         </div>
 
-        <!-- スクショ機能追加 -->
         <script>
             function takeScreenshot() {
                 const scene = document.querySelector('a-scene');
