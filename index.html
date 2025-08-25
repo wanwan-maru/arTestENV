@@ -1,6 +1,9 @@
 <!doctype html>
-<html>
+<html lang="ja">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>test</title>
         <!-- A-Frame ライブラリの読み込み ※GIFはV0.9.0から -->
         <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
         <!-- AR.js ライブラリの読み込み -->
@@ -10,7 +13,56 @@
 
         <!-- gesture ライブラリの読み込み 指で表示画像の大きさを変更できる -->
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
-        <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>      
+        <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+
+        <style>
+            body {
+                margin: 0;
+                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                background: #000;
+                color: #fff;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                height: 100vh;
+                overflow: hidden;
+                position: relative;
+            }
+            a-scene {
+                width: 100%;
+                height: 100vh;
+            }
+            .camera-controls {
+                width: 100%;
+                max-width: 400px;
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), #000);
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            .shutter-button {
+                width: 80px;
+                height: 80px;
+                background: radial-gradient(circle, #fff 60%, #ccc 65%, #000 70%);
+                border-radius: 50%;
+                border: 3px solid #ccc;
+                cursor: pointer;
+                transition: transform 0.1s;
+            }
+            .shutter-button:active {
+                transform: scale(0.95);
+            }
+            .shutter-button:focus {
+                outline: none;
+            }
+        </style>
     </head>
 
     <body style="margin: 0; overflow: hidden;">
@@ -19,6 +71,9 @@
             loading-screen="enabled: false;"
             arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
             gesture-detector
+            
+            screenshot="width: 2048; height: 1024"
+            
         >
             
             <!-- ここにAR Marker1の設定を入れる。urlでフォルダ内の.pattファイルを指定している -->
@@ -73,5 +128,24 @@
                 
             <a-entity camera></a-entity>
         </a-scene>
+
+        <div class="camera-controls">
+            <button class="shutter-button" onclick="takeScreenshot()"></button>
+        </div>
+
+        <!-- スクショ機能追加 -->
+        <script>
+            function takeScreenshot() {
+                const scene = document.querySelector('a-scene');
+                const screenshot = scene.components.screenshot;
+                const canvas = screenshot.getCanvas('perspective');
+                const imgData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = imgData;
+                link.download = 'ar-screenshot.png';
+                link.click();
+            }
+        </script>
+        
     </body>
 </html>
