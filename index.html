@@ -19,7 +19,9 @@
         <style>
             body, 
             a-scene {
-                margin: 0; padding: 0;　overflow: hidden;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
                 width: 100%; height: 100%;
             }
             
@@ -130,11 +132,16 @@
 
         if (canvas) {
             canvas.toBlob(blob => {
-                const url = URL.createObjectURL(blob);
-                // 新しいタブで画像を表示
-                window.open(url, '_blank');
-                // 必要なら一定時間後にURLを解放
-                setTimeout(() => URL.revokeObjectURL(url), 10000);
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'ar-screenshot.png';
+
+                // スマホ対応：一時的に body に追加してクリック
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                URL.revokeObjectURL(link.href);
             }, 'image/png');
         } else {
             alert('スクリーンショットの取得に失敗しました');
@@ -143,6 +150,5 @@
 </script>
 
 
-        
     </body>
 </html>
