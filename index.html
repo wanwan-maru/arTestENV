@@ -16,14 +16,12 @@
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
 
-        <!-- html2canvas -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
         <style>
             body, 
             a-scene {
                 margin: 0; padding: 0;　overflow: hidden;
                 width: 100%; height: 100%;
+                background-color: #000;
             }
             
             a-scene {
@@ -34,7 +32,7 @@
             }
             .camera-controls {
                 position: absolute;
-                bottom: 5vh;
+                bottom: 10%;
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 1;
@@ -43,11 +41,11 @@
                 align-items: center;
             }
             .shutter-button {
-                width: 15vw;
-                height: 15vw;
+                width: 18vw;
+                height: 18vw;
                 background: radial-gradient(circle, #fff 60%, #ccc 65%, #000 70%);
                 border-radius: 50%;
-                border: 0.5vw solid #ccc;
+                border: 0.5vw solid #888;
                 cursor: pointer;
                 transition: transform 0.1s;
             }
@@ -125,27 +123,27 @@
         <div class="camera-controls">
             <button class="shutter-button" onclick="takeScreenshot()"></button>
         </div>
+        
+<script>
+    function takeScreenshot() {
+        const scene = document.querySelector('a-scene');
+        const canvas = scene.components.screenshot.getCanvas('perspective');
 
-        <script>
-            async function takeScreenshot() {
-                const controls = document.querySelector('.camera-controls');
-                
-                controls.style.display = 'none';
-                const canvas = await html2canvas(document.body, {
-                    scale: window.devicePixelRatio,
-                    useCORS: true
-                });
-                controls.style.display = '';
-                
-                canvas.toBlob(blob => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'ar-screenshot.png';
-                link.click();
-                URL.revokeObjectURL(link.href);
-                }, 'image/png');
-            }
-        </script>
+        if (canvas) {
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                // 新しいタブで画像を表示
+                window.open(url, '_blank');
+                // 必要なら一定時間後にURLを解放
+                setTimeout(() => URL.revokeObjectURL(url), 10000);
+            }, 'image/png');
+        } else {
+            alert('スクリーンショットの取得に失敗しました');
+        }
+    }
+</script>
+
+
         
     </body>
 </html>
