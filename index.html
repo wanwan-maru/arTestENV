@@ -5,8 +5,8 @@
         <meta name="viewport"
             content="width=device-width, initial-scale=1.0", user-scalable=no">
         <title>test</title>
-        <!-- A-Frame ライブラリの読み込み ※GIFはV0.9.0から -->
-        <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+        <!-- A-Frame ライブラリの読み込み ※GIFはV0.9.0から 1.7.1  -->
+        <script src="https://aframe.io/releases/1.2.1/aframe.min.js"></script>
         <!-- AR.js ライブラリの読み込み -->
         <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
         <!-- shader ライブラリの読み込み fork元 mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js -->
@@ -63,6 +63,7 @@
             vr-mode-ui="enabled: false;"
             loading-screen="enabled: false;"
             arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+            renderer="preserveDrawingBuffer: true"
             gesture-detector
             screenshot="width: 2048; height: 1024"            
         >
