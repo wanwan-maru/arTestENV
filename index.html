@@ -6,7 +6,7 @@
             content="width=device-width, initial-scale=1.0", user-scalable=no">
         <title>test</title>
         <!-- A-Frame ライブラリの読み込み ※GIFはV0.9.0から 1.7.1  -->
-        <script src="https://aframe.io/releases/1.2.1/aframe.min.js"></script>
+        <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
         <!-- AR.js ライブラリの読み込み -->
         <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
         <!-- shader ライブラリの読み込み fork元 mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js -->
@@ -125,30 +125,56 @@
         <div class="camera-controls">
             <button class="shutter-button" onclick="takeScreenshot()"></button>
         </div>
+
+        <div id="shooting-indicator" style="
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1.2em;
+    z-index: 10000;
+    display: none;
+">
+    撮影中...
+</div>
         
 <script>
     function takeScreenshot() {
         const scene = document.querySelector('a-scene');
         const canvas = scene.components.screenshot.getCanvas('perspective');
+        const controls = document.querySelector('.camera-controls');
+        const indicator = document.getElementById('shooting-indicator');
 
-        if (canvas) {
-            canvas.toBlob(blob => {
+        if (canvas && controls && indicator) {
+            // ボタンを非表示
+            controls.style.display = 'none';
+            // 撮影中の文字を表示
+            indicator.style.display = 'block';
+
+            // 少し待ってからスクショを撮る
+            setTimeout(() => {
+                const dataURL = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
+                link.href = dataURL;
                 link.download = 'ar-screenshot.png';
-
-                // スマホ対応：一時的に body に追加してクリック
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
 
-                URL.revokeObjectURL(link.href);
-            }, 'image/png');
+                // ボタンとインジケーターを再表示・非表示
+                controls.style.display = '';
+                indicator.style.display = 'none';
+            }, 300); // 300ms 待機（描画安定＋ユーザー認識）
         } else {
             alert('スクリーンショットの取得に失敗しました');
         }
     }
 </script>
+
 
 
     </body>
