@@ -143,16 +143,21 @@
         const controls = document.querySelector('.camera-controls');
         const indicator = document.getElementById('shooting-indicator');
 
-        // A-Frameの描画Canvasを取得
-        const canvas = scene.canvas;
+        // A-Frameの描画arCanvasを取得
+        const arCanvas = scene.canvas;
         
-        if (canvas && video) {
-            // UIを一時的に非表示
-            controls.style.display = 'none';
-            indicator.style.display = 'block';
+        if (!arCanvas || !video) {
+            alert('カメラの読み込みが完了していません');
+            return;
+        }
+        
+        // UIを非表示
+        controls.style.display = 'none';
+        indicator.style.display = 'block';
 
-            // 少し待ってからスクショを撮る
-            setTimeout(() => {
+        // 少し待ってからスクショを撮る
+         setTimeout(function() {
+             
                 // 合成用のCanvasを作成
                 const offscreenCanvas = document.createElement('canvas');
                 offscreenCanvas.width = arCanvas.width;
@@ -165,7 +170,7 @@
                 ctx.drawImage(arCanvas, 0, 0);
 
                 // ダウンロード処理
-                const dataURL = canvas.toDataURL('image/png');
+                const dataURL = offscreenCanvas.toDataURL('image/png');
                 const link = document.createElement('a');
                 link.href = dataURL;
                 link.download = 'ar-screenshot.png';
