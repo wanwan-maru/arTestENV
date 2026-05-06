@@ -137,7 +137,7 @@
         ">撮影中...</div>
         
 <script>
-    async function takeScreenshot() {
+        function takeScreenshot() {
         const scene = document.querySelector('a-scene');
         const video = document.querySelector('video');
         const controls = document.querySelector('.camera-controls');
@@ -156,17 +156,15 @@
         indicator.style.display = 'block';
 
         // 少し待ってからスクショを撮る
-         setTimeout(function() {
-             
+         setTimeout(function() {             
                 // 合成用のCanvasを作成
                 const offscreenCanvas = document.createElement('canvas');
                 offscreenCanvas.width = arCanvas.width;
                 offscreenCanvas.height = arCanvas.height;
                 const ctx = offscreenCanvas.getContext('2d');
 
-                // 背面のビデオ映像を描画
+                // 背景とARを合成
                 ctx.drawImage(video, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
-                // ARオブジェクトを描画
                 ctx.drawImage(arCanvas, 0, 0);
 
                 // ダウンロード処理
@@ -182,10 +180,7 @@
                 controls.style.display = '';
                 indicator.style.display = 'none';
             }, 300); // 300ms 待機（描画安定＋ユーザー認識）
-        } else {
-            alert('スクリーンショットの取得に失敗しました');
         }
-    }
 </script>
 
     </body>
