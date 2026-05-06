@@ -134,9 +134,7 @@
             font-size: 1.2em;
             z-index: 10000;
             display: none;   
-        ">
-        撮影中...
-        </div>
+        ">撮影中...</div>
         
 <script>
     async function takeScreenshot() {
@@ -161,23 +159,19 @@
                 offscreenCanvas.height = arCanvas.height;
                 const ctx = offscreenCanvas.getContext('2d');
 
-                // 1. 背面のビデオ映像を描画
+                // 背面のビデオ映像を描画
                 ctx.drawImage(video, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
-
-                // 2. ARオブジェクトを描画
+                // ARオブジェクトを描画
                 ctx.drawImage(arCanvas, 0, 0);
 
-                // 3. ダウンロード処理
-                try {
-                    const dataURL = canvas.toDataURL('image/png');
-                    const link = document.createElement('a');
-                    link.href = dataURL;
-                    link.download = 'ar-screenshot.png';
-                    link.click();
-                } catch (err) {
-                    console.error("保存失敗:", err);
-                    alert("画像の保存に失敗しました。");
-                }
+                // ダウンロード処理
+                const dataURL = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'ar-screenshot.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.appendChild(link);
 
                 // UIを元に戻す
                 controls.style.display = '';
