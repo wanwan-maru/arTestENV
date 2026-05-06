@@ -127,45 +127,59 @@
         </div>
 
         <div id="shooting-indicator" style="
-    position: fixed;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.7);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 1.2em;
-    z-index: 10000;
-    display: none;
-">
-    撮影中...
-</div>
+            position: fixed;
+            top: 10%; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.7); color: white; 
+            padding: 10px 20px; border-radius: 10px;
+            font-size: 1.2em;
+            z-index: 10000;
+            display: none;   
+        ">
+        撮影中...
+        </div>
         
 <script>
-    function takeScreenshot() {
+    async function takeScreenshot() {
         const scene = document.querySelector('a-scene');
-        const canvas = scene.components.screenshot.getCanvas('perspective');
+        const video = document.querySelector('video');
         const controls = document.querySelector('.camera-controls');
         const indicator = document.getElementById('shooting-indicator');
 
-        if (canvas && controls && indicator) {
-            // ボタンを非表示
+        // A-Frameの描画Canvasを取得
+        const canvas = scene.canvas;
+        
+        if (canvas && video) {
+            // UIを一時的に非表示
             controls.style.display = 'none';
-            // 撮影中の文字を表示
             indicator.style.display = 'block';
 
             // 少し待ってからスクショを撮る
             setTimeout(() => {
-                const dataURL = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.href = dataURL;
-                link.download = 'ar-screenshot.png';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                // 合成用のCanvasを作成
+                const offscreenCanvas = document.createElement('canvas');
+                offscreenCanvas.width = arCanvas.width;
+                offscreenCanvas.height = arCanvas.height;
+                const ctx = offscreenCanvas.getContext('2d');
 
-                // ボタンとインジケーターを再表示・非表示
+                // 1. 背面のビデオ映像を描画
+                ctx.drawImage(video, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
+
+                // 2. ARオブジェクトを描画
+                ctx.drawImage(arCanvas, 0, 0);
+
+                // 3. ダウンロード処理
+                try {
+                    const dataURL = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = dataURL;
+                    link.download = 'ar-screenshot.png';
+                    link.click();
+                } catch (err) {
+                    console.error("保存失敗:", err);
+                    alert("画像の保存に失敗しました。");
+                }
+
+                // UIを元に戻す
                 controls.style.display = '';
                 indicator.style.display = 'none';
             }, 300); // 300ms 待機（描画安定＋ユーザー認識）
@@ -174,8 +188,6 @@
         }
     }
 </script>
-
-
 
     </body>
 </html>
