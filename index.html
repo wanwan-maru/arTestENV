@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="ja">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport"
-            content="width=device-width, initial-scale=1.0", user-scalable=no">
-        <title>test</title>
         <!-- A-Frame ライブラリの読み込み ※GIFはV0.9.0から 1.7.1  -->
         <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
         <!-- AR.js ライブラリの読み込み -->
@@ -15,57 +10,58 @@
         <!-- gesture ライブラリの読み込み 指で表示画像の大きさを変更できる -->
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
-
-        <style>
-            body, 
-            a-scene {
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-                width: 100%; height: 100%;
-            }
-            
-            a-scene {
-                position: fixed;
-                top: 0; 
-                left: 0; 
-                z-index: 0;
-            }
-            .camera-controls {
-                position: absolute;
-                bottom: 5%;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 1;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .shutter-button {
-                width: 15vw;
-                height: 15vw;
-                background: radial-gradient(circle, #fff 60%, #ccc 65%, #000 70%);
-                border-radius: 50%;
-                border: 0.5vw solid #888;
-                cursor: pointer;
-                transition: transform 0.1s;
-            }
-            
-            .shutter-button:active {
-                transform: scale(0.95);
-            }
-
-        </style>
     </head>
 
     <body>
-        <a-scene
+        <script>
+            <!-- 画像定義 -->
+            const images = [
+                { key: "img1", type: "png", file: "assets/test1.bin", mode: "binary" },
+                { key: "img2", type: "png", file: "assets/test2.bin", mode: "binary" }
+            ];
+
+            <!-- 読み込み関数 -->
+            function loadImage(img) {
+                if (img.mode === "base64") {
+                    return fetch(img.file)
+                        .then(res => res.text())
+                        .then(data => {
+                            return {
+                                key: img.key,
+                                src: `data:image/$(img.type);base64,${base64}`
+                            };
+                        });
+                }
+
+                if (img.mode === "binary") {
+                    return fetch(img.file)
+                        .then(res => res.arrayBuffer())
+                        .then(buffer => {
+                            const blob = new Blob([buffer], {type:`image/${img.type}` });
+                            return {
+                                key: img.key,
+                                src: url
+                            };
+                        });
+                }
+            }
+
+            <!-- バイナリを一括ロードして、srvMapの中にまとめる。 -->
+            Promise.all(imgae.map(loadImage)).then(result => {
+                const srcMap = {};
+                result.forEach(item => {
+                    srcMap[item.key] = item.src:
+                });
+            }];   
+
+                                                   
+        <!-- AR表示の作成 -->
+        <a-scene embedded
             vr-mode-ui="enabled: false;"
             loading-screen="enabled: false;"
             arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
             renderer="preserveDrawingBuffer: true"
-            gesture-detector
-            screenshot="width: 2048; height: 1024"            
+            gesture-detector  
         >
             
             <!-- ここにAR Marker1の設定を入れる。urlでフォルダ内の.pattファイルを指定している -->
@@ -94,7 +90,8 @@
                 <!-- 画像を水平に表示させる場合：rotation の最初の角度を「-90」, 他はhttps://aframe.io/docs/1.6.0/introduction/参照 -->
                 <!-- 画像の位置：マーカー基準でposition x(正が右、負が左?)  y(正が右、負が左?) z(正が下、負が上?)  -->
                 <a-image
-                    src="assets/HCG-kh.png"
+                    src = srcMap.img1;
+                    <!-- src="assets/HCG-kh.png" -->
                     rotation="-90 0 0" scale="3 3 3" position="0 0 0"
                     gesture-handler class="clickable"
                 ></a-image>
@@ -109,10 +106,12 @@
             >
                 <!-- 複数表示する場合は入れ子にしたほうが楽、奥に表示するものから記述する -->
                 <a-image
-                    src="assets/HCG-kh.png"
+                    src ="srcMap.img1" 
+                    <!-- src="assets/HCG-kh.png" -->
                     rotation="-90 0 0" scale="2 2 2" position="0 0 0">
                     <a-image
-                        src="assets/HCG-mm.png"
+                        src="srcMap.img2"
+                        <!-- // src="assets/HCG-mm.png" -->
                         scale="1 1 1" position="0 0 -.1">
                     </a-image>
                 </a-image>
@@ -121,67 +120,7 @@
             <a-entity camera></a-entity>
         </a-scene>
 
-        <!-- スクショ機能 -->
-        <div class="camera-controls">
-            <button class="shutter-button" onclick="takeScreenshot()"></button>
-        </div>
-
-        <div id="shooting-indicator" style="
-            position: fixed;
-            top: 10%; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.7); color: white; 
-            padding: 10px 20px; border-radius: 10px;
-            font-size: 1.2em;
-            z-index: 10000;
-            display: none;   
-        ">撮影中...</div>
+        </script>
         
-<script>
-        function takeScreenshot() {
-        const scene = document.querySelector('a-scene');
-        const video = document.querySelector('video');
-        const controls = document.querySelector('.camera-controls');
-        const indicator = document.getElementById('shooting-indicator');
-
-        // A-Frameの描画arCanvasを取得
-        const arCanvas = scene.canvas;
-        
-        if (!arCanvas || !video) {
-            alert('カメラの読み込みが完了していません');
-            return;
-        }
-        
-        // UIを非表示
-        controls.style.display = 'none';
-        indicator.style.display = 'block';
-
-        // 少し待ってからスクショを撮る
-         setTimeout(function() {             
-                // 合成用のCanvasを作成
-                const offscreenCanvas = document.createElement('canvas');
-                offscreenCanvas.width = arCanvas.width;
-                offscreenCanvas.height = arCanvas.height;
-                const ctx = offscreenCanvas.getContext('2d');
-
-                // 背景とARを合成
-                ctx.drawImage(video, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
-                ctx.drawImage(arCanvas, 0, 0);
-
-                // ダウンロード処理
-                const dataURL = offscreenCanvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.href = dataURL;
-                link.download = 'ar-screenshot.png';
-                document.body.appendChild(link);
-                link.click();
-                document.body.appendChild(link);
-
-                // UIを元に戻す
-                controls.style.display = '';
-                indicator.style.display = 'none';
-            }, 300); // 300ms 待機（描画安定＋ユーザー認識）
-        }
-</script>
-
     </body>
 </html>
