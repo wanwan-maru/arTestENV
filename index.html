@@ -31,7 +31,6 @@
             >
                     <!-- ここに表示するgif情報を入れている -->
                     <a-entity
-                        id="gif1"
                         geometry="primitive:plane;" material="shader:gif; src:url(assets/asset2.gif);"
                         rotation="-90 0 0" scale="4 4 4"
                         gesture-handler class="clickable"
@@ -87,16 +86,15 @@
                 { key: "img2", type: "png", file: "assets/test2.bin", mode: "binary" }
             ];
 
-            // 読み込み関数
-            if (img.mode === "binary") {
+            // 読み込み関数  if (img.mode === "binary") {
+            function loadImage(img) {   
                 return fetch(img.file)
                     .then(res => res.arrayBuffer())
                     .then(buffer => {
                         const blob = new Blob([buffer], {type:`image/${img.type}` });
                         const url = URL.createObjectURL(blob);
                         return { key: img.key, src: url };
-                        });
-                }
+                    });
             }
 
             // 一括ロード
@@ -107,7 +105,6 @@
             });
 
             // A-Frame 要素に反映
-            document.querySelector("#imgMarker2").setAttribute("src", srcMap.img1);
             document.querySelector("#img1").setAttribute("src", srcMap.img1);
             document.querySelector("#img2").setAttribute("src", srcMap.img2);
         });
