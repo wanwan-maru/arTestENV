@@ -12,49 +12,7 @@
         <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
     </head>
 
-    <body>
-        <script>
-            <!-- 画像定義 -->
-            const images = [
-                { key: "img1", type: "png", file: "assets/test1.bin", mode: "binary" },
-                { key: "img2", type: "png", file: "assets/test2.bin", mode: "binary" }
-            ];
-
-            <!-- 読み込み関数 -->
-            function loadImage(img) {
-                if (img.mode === "base64") {
-                    return fetch(img.file)
-                        .then(res => res.text())
-                        .then(data => {
-                            return {
-                                key: img.key,
-                                src: `data:image/$(img.type);base64,${base64}`
-                            };
-                        });
-                }
-
-                if (img.mode === "binary") {
-                    return fetch(img.file)
-                        .then(res => res.arrayBuffer())
-                        .then(buffer => {
-                            const blob = new Blob([buffer], {type:`image/${img.type}` });
-                            return {
-                                key: img.key,
-                                src: url
-                            };
-                        });
-                }
-            }
-
-            <!-- バイナリを一括ロードして、srvMapの中にまとめる。 -->
-            Promise.all(imgae.map(loadImage)).then(result => {
-                const srcMap = {};
-                result.forEach(item => {
-                    srcMap[item.key] = item.src:
-                });
-            }];   
-
-                                                   
+    <body style="margin: 0; overflow: hidden;">
         <!-- AR表示の作成 -->
         <a-scene embedded
             vr-mode-ui="enabled: false;"
@@ -73,6 +31,7 @@
             >
                     <!-- ここに表示するgif情報を入れている -->
                     <a-entity
+                        id="gif1"
                         geometry="primitive:plane;" material="shader:gif; src:url(assets/asset2.gif);"
                         rotation="-90 0 0" scale="4 4 4"
                         gesture-handler class="clickable"
@@ -89,9 +48,9 @@
                 <!-- ここに表示する画像情報を入れている。pngで透過可能。gifも使えるけど静止画になる -->
                 <!-- 画像を水平に表示させる場合：rotation の最初の角度を「-90」, 他はhttps://aframe.io/docs/1.6.0/introduction/参照 -->
                 <!-- 画像の位置：マーカー基準でposition x(正が右、負が左?)  y(正が右、負が左?) z(正が下、負が上?)  -->
+                <!-- src="assets/HCG-kh.png"       id="imgMarker2"     src = srcMap.img1; -->
                 <a-image
-                    src = srcMap.img1;
-                    <!-- src="assets/HCG-kh.png" -->
+                    src="assets/HCG-kh.png"
                     rotation="-90 0 0" scale="3 3 3" position="0 0 0"
                     gesture-handler class="clickable"
                 ></a-image>
@@ -105,13 +64,13 @@
                 cursor="fuse: false; rayOrigin: mouse;"
             >
                 <!-- 複数表示する場合は入れ子にしたほうが楽、奥に表示するものから記述する -->
+                <!-- src="assets/HCG-kh.png" -->
+                <!-- // src="assets/HCG-mm.png" -->
                 <a-image
-                    src ="srcMap.img1" 
-                    <!-- src="assets/HCG-kh.png" -->
+                    id="img1"                    
                     rotation="-90 0 0" scale="2 2 2" position="0 0 0">
                     <a-image
-                        src="srcMap.img2"
-                        <!-- // src="assets/HCG-mm.png" -->
+                        id="img2"                     
                         scale="1 1 1" position="0 0 -.1">
                     </a-image>
                 </a-image>
@@ -120,6 +79,39 @@
             <a-entity camera></a-entity>
         </a-scene>
 
+        
+        <script>
+            // 画像定義
+            const images = [
+                { key: "img1", type: "png", file: "assets/test1.bin", mode: "binary" },
+                { key: "img2", type: "png", file: "assets/test2.bin", mode: "binary" }
+            ];
+
+            // 読み込み関数
+            if (img.mode === "binary") {
+                return fetch(img.file)
+                    .then(res => res.arrayBuffer())
+                    .then(buffer => {
+                        const blob = new Blob([buffer], {type:`image/${img.type}` });
+                        const url = URL.createObjectURL(blob);
+                        return { key: img.key, src: url };
+                        });
+                }
+            }
+
+            // 一括ロード
+            Promise.all(images.map(loadImage)).then(result => {
+                const srcMap = {};
+                result.forEach(item => {
+                srcMap[item.key] = item.src;
+            });
+
+            // A-Frame 要素に反映
+            document.querySelector("#imgMarker2").setAttribute("src", srcMap.img1);
+            document.querySelector("#img1").setAttribute("src", srcMap.img1);
+            document.querySelector("#img2").setAttribute("src", srcMap.img2);
+        });
+                  
         </script>
         
     </body>
