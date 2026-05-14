@@ -96,7 +96,7 @@
             // 読み込み関数
             function loadImage(img) {   
                 return fetch(img.file)
-                    .then(res => res.text())  // Base64 を文字列として取得
+                    .then(res => res.text())  // Base64 を取得
                     .then(base64 => {
                         return { key: img.key, src: `data:image/${img.type};base64,${base64}` };
                     });
@@ -107,14 +107,17 @@
                 const srcMap = {};
                 result.forEach(item => {
                 srcMap[item.key] = item.src;
-            });
+                });
 
-            // A-Frame 要素に反映
-            document.querySelector("#img1").setAttribute("src", srcMap.img1);
-            document.querySelector("#img2").setAttribute("src", srcMap.img2);
-            // GIFの場合
-            document.querySelector("#gif1").setAttribute("material", `shader:gif; src:${srcMap.gif1}`);
-        });
+                // A-Frame 要素に反映
+                document.querySelector("#img1").setAttribute("src", srcMap.img1);
+                document.querySelector("#img2").setAttribute("src", srcMap.img2);
+                // GIFの場合
+                document.querySelector("#gif1").setAttribute("material", {
+                    shader: "gif",
+                    src: srcMap.gif1
+                });
+            });
                   
         </script>
         
