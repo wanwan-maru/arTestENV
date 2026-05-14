@@ -31,10 +31,10 @@
                 cursor="fuse: false; rayOrigin: mouse;"
             >
                     <!-- ここに表示するgif情報を入れている -->
-                    <!-- GIF直接の場合     material="shader:gif; src:url(assets/asset2.gif);"  -->
-                    <!-- バイナリにする場合 id="gif1"  -->
+                    <!-- GIF直接の場合は検証中     material="shader:gif; src:url(assets/asset2.gif);"  -->
+                    <!-- バイナリにする場合        id="gif1"  -->
                     <a-entity
-                        id="gif1"
+                        material="shader:gif; src:url(assets/asset2.gif);"
                         geometry="primitive:plane;"
                         rotation="-90 0 0" scale="4 4 4"
                         gesture-handler class="clickable"
@@ -88,9 +88,11 @@
             // 画像定義
             const images = [
                 { key: "img1", type: "png", file: "assets/test1.bin", mode: "base64" },
-                { key: "img2", type: "png", file: "assets/test2.bin", mode: "base64" },
-                // GIFの場合はtxtファイルじゃないと無理かも。画像はどっちでも
-                { key: "gif1", type: "gif", file: "assets/test3.txt", mode: "base64" }
+                { key: "img2", type: "png", file: "assets/test2.bin", mode: "base64" }
+                
+                // GIFの場合は検証中
+                // { key: "gif1", type: "gif", file: "assets/test3.txt", mode: "base64" }
+                
             ];
 
             // 読み込み関数
@@ -112,10 +114,12 @@
                 // A-Frame 要素に反映
                 document.querySelector("#img1").setAttribute("src", srcMap.img1);
                 document.querySelector("#img2").setAttribute("src", srcMap.img2);
-                // GIFの場合
-                document.querySelector("#gif1").setAttribute("material", {
-                    shader: "gif",
-                    src: srcMap.gif1
+                
+                // GIFの場合は検証中
+                //document.querySelector("#gif1").setAttribute("material", {
+                //    shader: "gif",
+                //    src: srcMap.gif1
+                
                 });
             });
         </script>
