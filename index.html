@@ -96,11 +96,15 @@
             // 読み込み関数
             function loadImage(img) {   
                 return fetch(img.file)
-                    .then(res => res.text())  // Base64 を取得
-                    .then(base64 => {
-                        return { key: img.key, src: `data:image/${img.type};base64,${base64}` };
-                    });
-            }
+        .then(res => res.body.getReader().read())
+        .then(({ value }) => {
+            const base64 = new TextDecoder("ascii").decode(value);
+            return {
+                key: img.key,
+                src: `data:image/${img.type};base64,${base64}`
+            };
+        });
+}
 
             // 一括読み込み
             Promise.all(images.map(loadImage)).then(result => {
@@ -113,14 +117,11 @@
                 document.querySelector("#img1").setAttribute("src", srcMap.img1);
                 document.querySelector("#img2").setAttribute("src", srcMap.img2);
                 // GIFの場合
-                const gifImg = new Image();
-                gifImg.onload = () => {
-                    document.querySelector("#gif1").setAttribute("material", {
-                        shader: "gif",
-                        src: srcMap.gif1
-                    });
+                document.querySelector("#gif1").setAttribute("material", {
+                    shader: "gif",
+                    src: srcMap.gif1
                 });
-                gifImg.src = srcMap.gif1;  
+            });
         </script>
         
     </body>
