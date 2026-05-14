@@ -113,12 +113,14 @@
                 document.querySelector("#img1").setAttribute("src", srcMap.img1);
                 document.querySelector("#img2").setAttribute("src", srcMap.img2);
                 // GIFの場合
-                document.querySelector("#gif1").setAttribute("material", {
-                    shader: "gif",
-                    src: srcMap.gif1
+                const gifImg = new Image();
+                gifImg.onload = () => {
+                    document.querySelector("#gif1").setAttribute("material", {
+                        shader: "gif",
+                        src: srcMap.gif1
+                    });
                 });
-            });
-                  
+                gifImg.src = srcMap.gif1;  
         </script>
         
     </body>
