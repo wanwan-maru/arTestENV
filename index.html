@@ -90,21 +90,17 @@
                 { key: "img1", type: "png", file: "assets/test1.bin", mode: "base64" },
                 { key: "img2", type: "png", file: "assets/test2.bin", mode: "base64" },
                 // GIFの場合
-                { key: "gif1", type: "gif", file: "assets/test3.bin", mode: "base64" }
+                { key: "gif1", type: "gif", file: "assets/test3.b64", mode: "base64" }
             ];
 
             // 読み込み関数
             function loadImage(img) {   
                 return fetch(img.file)
-        .then(res => res.body.getReader().read())
-        .then(({ value }) => {
-            const base64 = new TextDecoder("ascii").decode(value);
-            return {
-                key: img.key,
-                src: `data:image/${img.type};base64,${base64}`
-            };
-        });
-}
+                    .then(res => res.text())  // Base64 を取得
+                    .then(base64 => {
+                        return { key: img.key, src: `data:image/${img.type};base64,${base64}` };
+                    });
+            }
 
             // 一括読み込み
             Promise.all(images.map(loadImage)).then(result => {
