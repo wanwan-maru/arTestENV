@@ -23,19 +23,19 @@
         >
             
             <!-- ここにAR Marker1の設定を入れる。urlでフォルダ内の.pattファイルを指定している -->
-            
-            <!-- GIF直接の場合     url="assets/pattern-kantoku.patt"  -->
-            <!-- バイナリにする場合 id="gif1"  -->
             <a-marker
-                id="gif1" 
+                url="assets/pattern-kantoku.patt"
                 type="pattern" preset="custom"
                 raycaster="objects: .clickable"
                 emitevents="true"
                 cursor="fuse: false; rayOrigin: mouse;"
             >
                     <!-- ここに表示するgif情報を入れている -->
+                    <!-- GIF直接の場合     material="shader:gif; src:url(assets/asset2.gif);"  -->
+                    <!-- バイナリにする場合 id="gif1"  -->
                     <a-entity
-                        geometry="primitive:plane;" material="shader:gif; src:url(assets/asset2.gif);"
+                        id="gif1"
+                        geometry="primitive:plane;"
                         rotation="-90 0 0" scale="4 4 4"
                         gesture-handler class="clickable"
                     ></a-entity>
