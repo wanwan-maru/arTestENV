@@ -38,7 +38,6 @@
                         material="shader:gif; src:url(assets/asset2.gif);"
                         geometry="primitive:plane;"
                         rotation="0 0 0" scale="4 4 4"
-                        position="0 -0.5 0"
                         gesture-handler class="clickable"
                     ></a-entity>
             </a-marker>
@@ -57,8 +56,10 @@
                 <!-- src="assets/HCG-kh.png"       id="imgMarker2"     src = srcMap.img1; -->
                 <a-image
                     src="assets/HCG-kh.png"
-                    rotation="-90 0 0" scale="3 3 3" position="0 0 0"
-                    gesture-handler class="clickable"                    
+                    rotation="-90 0 0" scale="3 3 3"
+                    position="0 -3 0"
+                    animation="property: position; to: 0 0.5 0; dur: 500; easing: easeOutBack; startEvents: arjs-marker-visible"
+                    gesture-handler class="clickable"
                 ></a-image>
             </a-marker>
                 
